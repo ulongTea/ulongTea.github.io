@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://blog.tapiocanation.xyz</id>
     <title>Gingermilk&apos;s Cabin</title>
-    <updated>2021-02-28T22:31:11.810Z</updated>
+    <updated>2021-02-28T22:35:29.976Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://blog.tapiocanation.xyz"/>
     <link rel="self" href="https://blog.tapiocanation.xyz/atom.xml"/>
@@ -15,11 +15,11 @@
         <id>https://blog.tapiocanation.xyz/post/first-post/</id>
         <link href="https://blog.tapiocanation.xyz/post/first-post/">
         </link>
-        <updated>2021-02-23T18:10:13.000Z</updated>
+        <updated>2021-02-23T05:10:13.000Z</updated>
         <content type="html"><![CDATA[<p>So as you can see, I have decided to give gridea a try since it looks easy to configure and use. It''s a great static blog writing client for lazy people and non-techies. They should really promote themselves more instead of only focusing on Chinese users but somehow they didn't even manage to add English translation to their website.</p>
 <p>Btw they support linux.</p>
 <p>I guess I will use it for few more weeks and decide if I like it or not.</p>
-<p>This blog does not have any specific theme. I will try to update it at least once a month or even better, once a week. It would be good if you are willing to provide any feedback as it might encourage me to continue writing. But if you don't care, that's okay too. Just contact me by ways listed <a href="https://tapiocanation.xyz/contact.html">here</a>. Comment system willl not be implemented because I dislike them on blogs.</p>
+<p>This blog does not have any specific theme. I will try to update it at least once a month or even better, once a week. It would be good if you are willing to provide any feedback as it might encourage me to continue writing. But if you don't care, that's okay too. Just contact me by ways listed <a href='https://tapiocanation.xyz/contact.html' style='color: #E5D7C5'>here</a>. Comment system willl not be implemented because I dislike them on blogs.</p>
 <p>Enjoy.</p>
 ]]></content>
     </entry>
