@@ -2,11 +2,11 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ulongTea.github.io</id>
     <title>Tapioca Blog</title>
-    <updated>2021-02-28T02:39:04.104Z</updated>
+    <updated>2021-02-28T02:46:38.290Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ulongTea.github.io"/>
     <link rel="self" href="https://ulongTea.github.io/atom.xml"/>
-    <subtitle>Gingermilk&apos;s uwu blog</subtitle>
+    <subtitle>for other information, click here</subtitle>
     <logo>https://ulongTea.github.io/images/avatar.png</logo>
     <icon>https://ulongTea.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Tapioca Blog</rights>
