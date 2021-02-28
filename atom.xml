@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://ulongTea.github.io</id>
+    <id>https://blog.tapiocanation.xyz</id>
     <title>Tapioca Blog</title>
-    <updated>2021-02-28T02:46:38.290Z</updated>
+    <updated>2021-02-28T03:00:55.614Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://ulongTea.github.io"/>
-    <link rel="self" href="https://ulongTea.github.io/atom.xml"/>
+    <link rel="alternate" href="https://blog.tapiocanation.xyz"/>
+    <link rel="self" href="https://blog.tapiocanation.xyz/atom.xml"/>
     <subtitle>for other information, click here</subtitle>
-    <logo>https://ulongTea.github.io/images/avatar.png</logo>
-    <icon>https://ulongTea.github.io/favicon.ico</icon>
+    <logo>https://blog.tapiocanation.xyz/images/avatar.png</logo>
+    <icon>https://blog.tapiocanation.xyz/favicon.ico</icon>
     <rights>All rights reserved 2021, Tapioca Blog</rights>
     <entry>
         <title type="html"><![CDATA[First Post]]></title>
-        <id>https://ulongTea.github.io/post/first-post/</id>
-        <link href="https://ulongTea.github.io/post/first-post/">
+        <id>https://blog.tapiocanation.xyz/post/first-post/</id>
+        <link href="https://blog.tapiocanation.xyz/post/first-post/">
         </link>
         <updated>2021-02-27T00:10:13.000Z</updated>
         <content type="html"><![CDATA[<p>I will delete this later.</p>
