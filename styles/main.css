@@ -975,6 +975,10 @@ td {
   font-weight: bold;
 }
 
+      .main {
+        max-width: 1000px;
+      }
+    
       .post-container .post .post-title {
         text-align: left;
       }
@@ -993,11 +997,11 @@ td {
       }
     
       .main {
-        background: #000000;
+        background: #121212;
       }
     
       body {
-        background: #000000;
+        background: #121212;
       }
     
       body {
@@ -1009,6 +1013,6 @@ td {
       }
     
       a:hover {
-        color: #fffff;
+        color: #d0ebff;
       }
     

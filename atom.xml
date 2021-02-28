@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://blog.tapiocanation.xyz</id>
-    <title>Tapioca Blog</title>
-    <updated>2021-02-28T04:21:22.106Z</updated>
+    <title>Gingermilk&apos;s Cabin</title>
+    <updated>2021-02-28T19:01:04.792Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://blog.tapiocanation.xyz"/>
     <link rel="self" href="https://blog.tapiocanation.xyz/atom.xml"/>
-    <subtitle>for other information, click &lt;a href=&quot;https://www.google.com&quot;&gt;here&lt;/a&gt;</subtitle>
+    <subtitle>A place for me to record things.</subtitle>
     <logo>https://blog.tapiocanation.xyz/images/avatar.png</logo>
     <icon>https://blog.tapiocanation.xyz/favicon.ico</icon>
-    <rights>All rights reserved 2021, Tapioca Blog</rights>
+    <rights>All rights reserved 2021, Gingermilk&apos;s Cabin</rights>
     <entry>
         <title type="html"><![CDATA[First Post]]></title>
         <id>https://blog.tapiocanation.xyz/post/first-post/</id>
         <link href="https://blog.tapiocanation.xyz/post/first-post/">
         </link>
-        <updated>2021-02-25T09:10:13.000Z</updated>
+        <updated>2021-02-24T20:10:13.000Z</updated>
         <content type="html"><![CDATA[<p>I will delete this later.</p>
 <p>So it is at least working somehow lol</p>
 ]]></content>
