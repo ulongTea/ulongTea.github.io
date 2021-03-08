@@ -610,7 +610,7 @@ td {
   left: 0;
   content: "\201c";
   font: 700 62px/1 serif;
-  color: rgba(0, 0, 0, 0.1);
+  color: #FDFDF9;
 }
 .post-detail .post .post-content table {
   border-collapse: collapse;
