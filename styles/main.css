@@ -361,7 +361,7 @@ td {
 .site-header .site-description {
   font-size: 16px;
   padding: 24px;
-  color: #495057;
+  color: #989898;
   font-weight: lighter;
 }
 .site-header .menu-container {
@@ -417,7 +417,7 @@ td {
   padding-bottom: 24px;
 }
 .post-container .post .post-info > span {
-  color: #5E5E5E;
+  color: #989898;
 }
 .post-container .post .post-info > span:not(:first-child):before {
   content: "/ ";
@@ -599,7 +599,7 @@ td {
   line-height: 1.5;
 }
 .post-detail .post .post-content blockquote {
-  color: #FDFDF9;
+  color: #D7E6FA;
   position: relative;
   padding: 0.4em 0 0 2.2em;
   font-size: 0.96em;
@@ -610,7 +610,7 @@ td {
   left: 0;
   content: "\201c";
   font: 700 62px/1 serif;
-  color: #FDFDF9;
+  color: #D7E6FA;
 }
 .post-detail .post .post-content table {
   border-collapse: collapse;
@@ -670,7 +670,7 @@ td {
   margin: 2.24em auto 2.86em;
 }
 .post-detail .post .post-content hr:before {
-  color: #faebd7;
+  color: #756e66;
   font-size: 1.1em;
   display: block;
   content: "* * *";
@@ -763,7 +763,7 @@ td {
 }
 .next-post .next {
   margin-bottom: 24px;
-  color: #343a40;
+  color: #989898;
   font-weight: lighter;
 }
 .next-post .post-title {
