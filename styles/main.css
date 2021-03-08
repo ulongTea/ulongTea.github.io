@@ -531,7 +531,7 @@ td {
   padding-bottom: 24px;
 }
 .post-detail .post .post-info > span {
-  color: #5E5E5E;
+  color: #989898;
 }
 .post-detail .post .post-info > span:not(:first-child):before {
   content: "/ ";
@@ -599,7 +599,7 @@ td {
   line-height: 1.5;
 }
 .post-detail .post .post-content blockquote {
-  color: #9a9a9a;
+  color: #FDFDF9;
   position: relative;
   padding: 0.4em 0 0 2.2em;
   font-size: 0.96em;
@@ -670,7 +670,7 @@ td {
   margin: 2.24em auto 2.86em;
 }
 .post-detail .post .post-content hr:before {
-  color: rgba(0, 0, 0, 0.2);
+  color: #faebd7;
   font-size: 1.1em;
   display: block;
   content: "* * *";
