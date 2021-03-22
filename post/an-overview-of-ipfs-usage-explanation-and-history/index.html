@@ -1,0 +1,268 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>An Overview of IPFS: Usage, Explanation, and Thoughts | Gingermilk&#39;s Cabin</title>
+<link rel="shortcut icon" href="https://blog.tapiocanation.xyz/favicon.ico?v=1616380758718">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://blog.tapiocanation.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="An Overview of IPFS: Usage, Explanation, and Thoughts | Gingermilk&#39;s Cabin - Atom Feed" href="https://blog.tapiocanation.xyz/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="Until now, the World Wide Web relies on HTTP to transfer data and establish communication across the web. But in 2015, a..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://blog.tapiocanation.xyz">
+  <img class="avatar" src="https://blog.tapiocanation.xyz/images/avatar.png?v=1616380758718" alt="">
+  </a>
+  <h1 class="site-title">
+    Gingermilk&#39;s Cabin
+  </h1>
+  <p class="site-description">
+    A place for me to record things.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archives
+        </a>
+      
+    
+      
+        <a href="https://blog.tapiocanation.xyz/tags" class="menu">
+          Tags
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              An Overview of IPFS: Usage, Explanation, and Thoughts
+            </h2>
+            <div class="post-info">
+              <span>
+                2021-03-18
+              </span>
+              <span>
+                13 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>Until now, the World Wide Web relies on HTTP to transfer data and establish communication across the web. But in 2015, an American guy named Juan Benet created a new protocol called IPFS, or you might like its sci-fi sounding name better, <em>&quot;InterPlanetary File System&quot;</em>, to compete with HTTP. Instead of the classic server-client approach, IPFS decides to go with peer-to-peer, which should sound familiar if you know BitTorrent. <strong>To summarize it in a short sentence, IPFS is a peer-to-peer file sharing system that claims to be faster, safer, and more open.</strong></p>
+<p>The goal of IPFS is to provide a better alternative for HTTP and ultimately, to replace HTTP. This sounds extremely ambitious, and that's why it interests me. However, after tried it for a little while, I have to say that IPFS is still too immature compared to HTTP, considering that the later one has dominated the web (to be more precise, it started the web) since its creation in the 90s and has evolved a lot after that. IPFS is a promising and somehow a little revolutionary project, but it still needs time to develop.</p>
+<hr>
+<p>First, let's take a look at how to use IPFS. In order to use IPFS, there are some basic concepts one needs to know:</p>
+<ul>
+<li><strong>Every file on the IPFS network has a unique hash, known as CID</strong>, that resembles a location address and we can use the hash to point to a specific file.</li>
+<li><strong>IPFS is decentralized, which makes it function like a CDN</strong>. Files are being kept multiple backups so even if the node who originally published the specific file is down, the requested file can still be retrieved from other nodes. This process ensures speed and availability of most files.</li>
+<li><strong>IPFS is a self-certifying file system (SFS)</strong>, which means that o special permission is needed for data exchange.</li>
+<li><strong>The content on IPFS is not permanent unless it is pinned</strong>.</li>
+</ul>
+<p>###How to Retrieve Content<br>
+There are currently four ways to retrieve content from IPFS: public gateway, local gateway, get/cat command, and Integrated IPFS in Brave browser.</p>
+<p>####Public Gateway<br>
+Protocol Labs maintains a <a href="https://ipfs.github.io/public-gateway-checker/">list of public gateways</a> that allows users to view the content of files on the  IPFS network without installing IPFS on their local machines.</p>
+<p>To use it, choose an online gateway and follow the syntax here:<br>
+<code>&lt;gateway address&gt;/ipfs/&lt;hash&gt;</code></p>
+<p>For example, here is what you will type in your browser to access a copy of the Turkish wikipedia:<br>
+<code>ipfs.io/ipfs/QmT5NvUtoM5nWFfrQdVrFtvGfKFmG7AHE8P34isapyhCxX/</code></p>
+<p>####Local Gateway<br>
+Download IPFS-Desktop from <a href="https://github.com/ipfs-shipyard/ipfs-desktop/releases/tag/v0.14.0">here</a> or use the Go implementation of IPFS by following this <a href="https://docs.ipfs.io/install/command-line/">guide</a> if you are on a remote server or just think GUI is bloated.</p>
+<p>Initialize the repository:<br>
+<code>ipfs init</code></p>
+<p>Take the node online:<br>
+<code>ipfs daemon</code><br>
+<em>(or use a service manager if on Unix systems)</em></p>
+<p>Now you can access content by typing this in your browser:<br>
+<code>127.0.0.1:8080/ipfs/&lt;hash&gt;</code></p>
+<p>The port can be specified in the config file.</p>
+<p>####get/cat Command<br>
+Make sure you have installed IPFS-Desktop or go-ipfs and the daemon is started.</p>
+<p>The ipfs cat command is similar to the cat command on Unix systems and it reads content from the IPFS network.<br>
+<code>ipfs cat &lt;hash&gt;</code></p>
+<p>Alternatively, you can use the get command to download the content.<br>
+<code>ipfs get &lt;hash&gt;</code></p>
+<p>If nothing returns, it is possible that none of the peers you are connected to holds a copy of the file you requested. To check if any peer has the file, run:<br>
+<code>ipfs dht findprovs &lt;hash&gt;</code></p>
+<p>You cannot request a file from a specific peer because there is no point in doing this. All the files that share the same hash contain the identical content.</p>
+<p>####Integrated IPFS in Brave Browser<br>
+Brave anounced their support of IPFS in January this year. You can type this in Brave browser to access content:<br>
+<code>ipfs://&lt;hash&gt;</code></p>
+<p>Be aware that by default, Brave uses public gateways to load the requested content. Brave will suggest you to enable IPFS local daemon support if you are visiting through a public gateway, and by clicking &quot;Enable IPFS&quot;, Brave will automatically download go-ipfs and route all IPFS traffic through your local gateway.</p>
+<p>###How To Add Content<br>
+Download IPFS-Desktop <a href="https://github.com/ipfs-shipyard/ipfs-desktop/releases/tag/v0.14.0">here</a> or follow this <a href="https://docs.ipfs.io/install/command-line/">guide</a> to install go-ipfs if you have not already done so. Now you are able to upload file from the desktop app, webUI, or directly from the command line. I guess <a href="https://pinata.cloud/">pinata</a> will also work, but I have never tried it.</p>
+<p>####Desktop App &amp; GUI<br>
+Open the app or access the webUI by typing this in your browser:<br>
+<code>127.0.0.1:5001/webui</code><br>
+<em>(you need to start the daemon first in order to access the webUI and the port can be speficied in the config file or through 'settings')</em></p>
+<p>Click import and pin it if needed.</p>
+<p>####Command line<br>
+To add a file, run:<br>
+<code>ipfs add path/to/file</code></p>
+<p>Add -r to add a directory.<br>
+<code>ipfs add -r path/to/directory</code><br>
+<em>(Record the hash because you need it later to access your file. )</em></p>
+<p>To pin the file, run:<br>
+<code>ipfs pin add &lt;hash&gt;</code></p>
+<p>Or add -r for directory.</p>
+<p>Other basic commands are explained by <code>ipfs -h</code>. Please use them for reference.</p>
+<hr>
+<p>Now we can get deeper into the structure of IPFS.</p>
+<p>###DHT<br>
+<strong>DHT, or distributed hash table, is a data structure used by IPFS that stores information as key pairs</strong>. Relying on DHT's decentralization, IPFS is able to function even if some nodes do down.</p>
+<p>###Merkle DAG<br>
+IPFS uses Merkle DAG as its data structure. According to the <a href="https://docs.ipfs.io/concepts/merkle-dag/#further-resources">official documentation of IPFS</a>, <em>&quot;A Merkle DAG is a DAG where each node has an identifier, and this is the result of hashing the node's contents — any opaque payload carried by the node and the list of identifiers of its children — using a cryptographic hash function like SHA256. &quot;</em> Merkle DAG resembles a &quot;reversed tree&quot; in which grows from leaves to branch. In order to link children's identifiers to the parents, children's identifiers must be calculated first.</p>
+<p>If you recall how I mentioned why request to a specific peer is unnecessary, here is a more detailed explanation: <strong>all nodes are given a unique CID (identifier or can just be called hash) to be identified from the network and the CID is linked to all its descendants</strong>. Copies of the requested objects with that CID from all peers are identical because they share the same DAG. If a change is made in one node, its identifier would alter which also causes its ascendants to alter correspondingly. This process creates a new DAG that cannot be retrieved using the original identifier.</p>
+<p>###IPFS Objects<br>
+An IPFS object is a structure that contains two fields, which can be visualized as follows</p>
+<ul>
+<li>data: unstructured binary data &lt; 256kb</li>
+<li>Links: links that point to other IPFS objects
+<ul>
+<li>Name: the name of the link</li>
+<li>Hash: the hash of the linked object</li>
+</ul>
+</li>
+</ul>
+<p>You can see the structure of any object by running <code>ipfs object get &lt;hash&gt;</code>.</p>
+<p>If the object is smaller than 256kb, the <em>links</em> section will be empty because there is no other sectors to point to. But if the object is larger than 256kb, it is going to be further divided into sectors that are smaller than 256kb and the <em>name</em> section will be empty. Each sector will get an unique hash and the final hash for the file will be calculated after combining all the sector hashes into one group. This works inversely when retrieving files. When an user requests a file from the network by hash, the sector hashes specified by that file hash will be searched and downloaded from the node that holds it. After that, they will be arranged in the correct order and will be assembled locally.</p>
+<p>IPFS also works like Git that it supports versions. The commit object will have one or more links that point to previous commits, and one object link that points to the DAG for that commit.</p>
+<hr>
+<p>Even though the concept of a decentralized file system and content addressing sounds really attractive, IPFS still remains a toy for those tech enthusiasts after 6 years. <strong>To me IPFS is a powerful tool, yet also powerless due to its developers' ambition to overthrow the traditional structure of web</strong>. It would be better for it to focus on a specific field, gain more active users, and then consider the next step if its ultimate goal is to compete in a monopolized market. Despite IPFS's attempts at conquering every corner of the web that involves static content, better, easier, and more stable alternatives have all already existed which makes the invention of IPFS somehow purposeless. This is getting even more difficult regarding dynamic content.</p>
+<p>Common usages of IPFS involve static website hosting, file backup, file sharing, etc. As I stated previously, IPFS is capable at completing many tasks, but excel at none of them. The speed of IPFS is also concerning (or maybe I should put the blame on my computer rather tha IPFS) compared to other data exchanging services. We are now already at a shortage of nodes as its user base remains small.</p>
+<p>One common misconception for IPFS that tempts some users to try it is that it is private, but in fact it is not if you are running it on open network without assist from file encryption, VPN/Tor, or establishment of a private IPFS network.</p>
+<p>I would not argue that IPFS is completely useless, as its performance in the 2017 Catalan independence referendum has proved that <strong>IPFS can be used to combat censorship under an authoritarian government that obtains massive amount of resources to block the country's access to the free world</strong>. In 2017, the Spanish government has blocked every website about the referendum to restrain the spread of information. Soon the Catalan government moved the website to IPFS and despite the Spanish government's multiple attempts at blocking all public gateways by brutal force, new nodes always arise as people started to maintain their own nodes. Again, IPFS is not private, so many citizens who published information on the referendum were arrested by the Spanish government as a result.</p>
+<p>You could argue that there are better alternatives for secure information sharing, like how Hong Kong protesters used the Telegram channel to broadcast news during the 2020 Anti-Extradition Law Amendment Bill Movement. The main, and allow me to say this, the only advantage of IPFS is decentralization. It does not matter how powerful and resourceful a government is, as long as there is internet, information can be spread. The only concern right now is how to find an accessible gateway without pinging every known gateway in a country where IPFS is &quot;censored&quot;.</p>
+<p>In fact, IPFS is not the only project who has introduced the idea of decentralized file sharing. An anonymous Chinese blogger famous for his/her criticism of the Chinese government and comprehensive privacy guides titled &quot;Programthink&quot; has used BitTorrent Sync, a decentralized file synchronization tool, to spread banned books in mainland China.</p>
+<p>This is just a summary of how IPFS operates and my brief thought on it. I am looking forward to seeing more creative or practical usage of it, but right now I find no particular reason to use it. However, I would be really interested to see if the implementation of IPFS would be successful in China, as I have not seen any wide usage of it even among those who are able to pass through GFW. Yet in other countries that are not intensely censored, the probability of IPFS overtaking older protocols seems low, as IPFS aims to subvert the base system of the web.</p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">Next Article</div>
+            <a href="https://blog.tapiocanation.xyz/post/peace-and-love-self-censorship-and-the-future-of-social-media/">
+              <h3 class="post-title">
+                &#34;Peace &amp; Love&#34;, Self-censorship, and the Future of Social Media
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+
+          
+            <link rel="stylesheet" href="https://unpkg.com/disqusjs@1.1/dist/disqusjs.css">
+<script src="https://unpkg.com/disqusjs@1.1/dist/disqus.js"></script>
+
+<div id="disqus_thread"></div>
+
+<script>
+
+var options = {
+  shortname: 'gingeryum',
+  apikey: 'icC4GzSrpNawmpHd91kR1Ns03i2jHwjR8tRDV90gXCFaxZROOrelXmxBYXbXjOnn',
+}
+if ('https://disqus.skk.moe/disqus/') {
+  options.api = 'https://disqus.skk.moe/disqus/'
+}
+var dsqjs = new DisqusJS(options)
+
+</script>
+
+          
+        
+
+        <div class="site-footer">
+  Powered by  <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://blog.tapiocanation.xyz/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

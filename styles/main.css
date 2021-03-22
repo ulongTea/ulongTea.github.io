@@ -551,7 +551,7 @@ td {
   font-family: "Droid Serif", "PingFang SC", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", sans-serif;
 }
 .post-detail .post .post-content a {
-  color: rgba(0, 0, 0, 0.98);
+  color: #756e66;
   word-wrap: break-word;
   text-decoration: none;
   border-bottom: 1px solid rgba(0, 0, 0, 0.26);
