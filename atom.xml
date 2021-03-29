@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://blog.tapiocanation.xyz</id>
     <title>Gingermilk&apos;s Cabin</title>
-    <updated>2021-03-22T02:46:23.960Z</updated>
+    <updated>2021-03-29T01:07:04.990Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://blog.tapiocanation.xyz"/>
     <link rel="self" href="https://blog.tapiocanation.xyz/atom.xml"/>
@@ -142,7 +142,7 @@ An IPFS object is a structure that contains two fields, which can be visualized 
         <id>https://blog.tapiocanation.xyz/post/first-post/</id>
         <link href="https://blog.tapiocanation.xyz/post/first-post/">
         </link>
-        <updated>2021-02-22T16:10:13.000Z</updated>
+        <updated>2021-02-22T03:10:13.000Z</updated>
         <content type="html"><![CDATA[<p>So as you can see, I have decided to give gridea a try since it looks easy to configure and use. It''s a great static blog writing client for lazy people and non-techies. They should really promote themselves more instead of only focusing on Chinese users but somehow they didn't even manage to add English translation to their website.</p>
 <p>Btw they support linux.</p>
 <p>I guess I will use it for few more weeks and decide if I like it or not.</p>
