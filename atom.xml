@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://blog.tapiocanation.xyz</id>
     <title>Gingermilk&apos;s Cabin</title>
-    <updated>2021-04-15T03:50:51.968Z</updated>
+    <updated>2021-04-15T03:51:34.454Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://blog.tapiocanation.xyz"/>
     <link rel="self" href="https://blog.tapiocanation.xyz/atom.xml"/>
@@ -15,7 +15,7 @@
         <id>https://blog.tapiocanation.xyz/post/building-a-simple-proxy-with-v2ray/</id>
         <link href="https://blog.tapiocanation.xyz/post/building-a-simple-proxy-with-v2ray/">
         </link>
-        <updated>2021-04-13T23:37:15.000Z</updated>
+        <updated>2021-04-13T11:37:15.000Z</updated>
         <content type="html"><![CDATA[<p>V2ray is &quot;a platform for building proxies to bypass network restrictions&quot;. You can find the github page <a href="https://github.com/v2fly/v2ray-core">here</a>, the official English website <a href="https://www.v2ray.com/en/index.html">here</a>, and also <a href="https://www.v2fly.org/en_US/">here</a>. As you might have noticed, v2ray is not a tool invented primarily for privacy (but it is very tweakable for all kinds of purposes), bur is rather used to bypass the GFW in China. Most of you will never use it probably, but it is always fun to try new things, am I right? And remember what I have said, its customization gives you a variety of options to play around with, like obfuscation, transparent proxy, or even ad blocking.</p>
 <p>In a nutshell, v2ray uses a inbound-and-outbound structure to control the flow of packets. If v2ray is used on a client, then the inbound will receive data from the browser and the outbound will send data to the server; if v2ray is used on a server, then the inbound will receive data from the client and the outbound will send data to where the client has requested. You can have multiple outbounds and inbounds. The way inbound and outbound handles data is determined by different protocols (Socks, VMess, VLess, Freedom, etc.), and each protocol may have its own transport (TCP, mKcp, WebSocket, etc.).</p>
 <p>VMess is an original and the most widely used protocol, developed by V2ray specifically for passing the deep packet inspection imposed by the GFW. VLess is an updated version of it that does not require time synchronization but does not have the traffic encrypted. Here we are going to setup a basic proxy using VMess.</p>
