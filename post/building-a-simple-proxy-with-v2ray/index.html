@@ -1,0 +1,319 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Building a simple proxy with V2ray | Gingermilk&#39;s Cabin</title>
+<link rel="shortcut icon" href="https://blog.tapiocanation.xyz/favicon.ico?v=1618458620171">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://blog.tapiocanation.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Building a simple proxy with V2ray | Gingermilk&#39;s Cabin - Atom Feed" href="https://blog.tapiocanation.xyz/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="V2ray is &quot;a platform for building proxies to bypass network restrictions&quot;. You can find the github page here, ..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://blog.tapiocanation.xyz">
+  <img class="avatar" src="https://blog.tapiocanation.xyz/images/avatar.png?v=1618458620171" alt="">
+  </a>
+  <h1 class="site-title">
+    Gingermilk&#39;s Cabin
+  </h1>
+  <p class="site-description">
+    A place for me to record things.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archives
+        </a>
+      
+    
+      
+        <a href="https://blog.tapiocanation.xyz/tags" class="menu">
+          Tags
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Building a simple proxy with V2ray
+            </h2>
+            <div class="post-info">
+              <span>
+                2021-04-13
+              </span>
+              <span>
+                7 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>V2ray is &quot;a platform for building proxies to bypass network restrictions&quot;. You can find the github page <a href="https://github.com/v2fly/v2ray-core">here</a>, the official English website <a href="https://www.v2ray.com/en/index.html">here</a>, and also <a href="https://www.v2fly.org/en_US/">here</a>. As you might have noticed, v2ray is not a tool invented primarily for privacy (but it is very tweakable for all kinds of purposes), bur is rather used to bypass the GFW in China. Most of you will never use it probably, but it is always fun to try new things, am I right? And remember what I have said, its customization gives you a variety of options to play around with, like obfuscation, transparent proxy, or even ad blocking.</p>
+<p>In a nutshell, v2ray uses a inbound-and-outbound structure to control the flow of packets. If v2ray is used on a client, then the inbound will receive data from the browser and the outbound will send data to the server; if v2ray is used on a server, then the inbound will receive data from the client and the outbound will send data to where the client has requested. You can have multiple outbounds and inbounds. The way inbound and outbound handles data is determined by different protocols (Socks, VMess, VLess, Freedom, etc.), and each protocol may have its own transport (TCP, mKcp, WebSocket, etc.).</p>
+<p>VMess is an original and the most widely used protocol, developed by V2ray specifically for passing the deep packet inspection imposed by the GFW. VLess is an updated version of it that does not require time synchronization but does not have the traffic encrypted. Here we are going to setup a basic proxy using VMess.</p>
+<hr>
+<p><em><strong>Server</strong></em><br>
+Log into your server and set the time if it's not what you have on the client.</p>
+<pre><code class="language-bash">date -s 'year-month-day hour:minute:second'
+</code></pre>
+<p>It would be the easiest to install V2ray via their script.</p>
+<pre><code class="language-bash">wget https://install.direct/go.sh
+bash go.sh
+</code></pre>
+<p>After the installation is finished, we can proceed to edit the config file. It is included as part of the installation script, named <code>config.json</code>. It should be edited like this:</p>
+<pre><code class="language-json">{
+  &quot;log&quot;: {
+      &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,
+      &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;,
+      &quot;loglevel&quot;: &quot;info&quot;
+  },
+  &quot;inbounds&quot;: [
+    {
+      &quot;port&quot;: [port number],
+      &quot;protocol&quot;: &quot;vmess&quot;,   
+      &quot;settings&quot;: {
+        &quot;clients&quot;: [
+          {
+            &quot;id&quot;: &quot;[your uuid]&quot;,
+            &quot;alterId&quot;: [your alterid]
+          }
+        ]
+      }
+    }
+  ],
+  &quot;outbounds&quot;: [
+    {
+      &quot;protocol&quot;: &quot;freedom&quot;,
+      &quot;settings&quot;: {}
+    }
+  ]
+}
+</code></pre>
+<p><code>inbounds vmess port</code>: the listening port on the server<br>
+<code>id</code>: the main id of the user. you can generate one <a href="https://www.uuidgenerator.net/">here</a><br>
+<code>alterid</code>: used to pass the inspection. can be anywhere between 0 to the largest number your server can support<br>
+<code>freedom</code>: passes all TCP or UDP connection to their destinations</p>
+<p>Now start the service.</p>
+<pre><code class="language-bash">systemctl start v2ray.service
+</code></pre>
+<p>If you have a firewall enabled, make sure to open the listening port. I am using ufw here.</p>
+<pre><code class="language-bash">ufw allow [port number]/tcp
+ufw allow [port number]/udp
+</code></pre>
+<p><em><strong>Linux Client</strong></em><br>
+Find your system's architecture <a href="https://github.com/v2fly/v2ray-core/releases/tag/v4.37.3">here</a>. Download and extract it. Now find the <code>config.json</code> file and write it like this.</p>
+<pre><code class="language-json">{
+  &quot;log&quot;:{
+   &quot;loglevel&quot;: &quot;info&quot;,
+   &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,
+   &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;
+  },
+  &quot;inbounds&quot;: [
+    {
+      &quot;port&quot;: [port number],
+      &quot;protocol&quot;: &quot;socks&quot;,
+      &quot;sniffing&quot;: {
+        &quot;enabled&quot;: true,
+        &quot;destOverride&quot;: [&quot;http&quot;, &quot;tls&quot;]
+      },
+      &quot;settings&quot;: {
+        &quot;auth&quot;: &quot;noauth&quot;  
+      }
+    },
+    {
+      &quot;port&quot;: [port number],
+      &quot;protocol&quot;: &quot;http&quot;,
+      &quot;sniffing&quot;: {
+          &quot;enabled&quot;: true,
+          &quot;destOverride&quot;: [&quot;http&quot;, &quot;tls&quot;]
+        }
+     }
+  ],
+  &quot;outbounds&quot;: [
+    {
+      &quot;protocol&quot;: &quot;vmess&quot;,
+      &quot;settings&quot;: {
+        &quot;vnext&quot;: [
+          {
+            &quot;address&quot;: &quot;[server's ip address]&quot;,
+            &quot;port&quot;: [port number],  
+            &quot;users&quot;: [
+              {
+                &quot;id&quot;: &quot;[your uuid]&quot;,  //need to be the same as the server config
+                &quot;alterId&quot;: [your alterid], //need to be the same as the server config
+                &quot;security&quot;: &quot;auto&quot;
+              }
+            ]
+          }
+        ]
+      },
+      &quot;mux&quot;: {&quot;enabled&quot;: true}
+    }
+  ]
+}
+</code></pre>
+<p><code>inbounds socks port</code>: the listening port on your client for Socks protocol<br>
+<code>sniffing</code>: content sniffing, can be used for solving DNS spoofing and setting rules for domains<br>
+<code>noauth</code>: anonymous authentication<br>
+<code>inbounds http port</code>: the listening port on your client for HTTP protocol<br>
+<code>outbounds vmess port</code>: the listening port on your server<br>
+<code>security</code>: can be <code>aes-128-gcm</code> for PC use, <code>chacha20-poly1305</code> for phone use, or <code>auto</code> for automatic detection<br>
+<code>mux</code>: designed to reduce TCP handshake latency by using one physical TCP connections for multiple virtual TCP connections. might not be needed</p>
+<p>To allow v2ray to autostart, you could add a systemd entry to the <code>/etc/systemd/system</code> folder. Make sure the config file and the executable file are in the same folder.</p>
+<pre><code class="language-bash">[Unit]
+Description=v2ray
+After=network.target
+
+[Service]
+ExecStart=/path/to/v2ray
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+<p>Start it and enable it.</p>
+<pre><code class="language-bash">systemctl start v2ray.service
+systemctl enable v2ray.service
+</code></pre>
+<p>If it can't be started, you might need to create the log files manually.</p>
+<p><em><strong>Windows Client</strong></em><br>
+Find your system's architecture <a href="https://github.com/v2fly/v2ray-core/releases/tag/v4.37.3">here</a>. Download and extract it. The config file should be the same as what I wrote above for linux and the only change you need to make is to delete the <code>log</code> sector because windows doesn't support it.</p>
+<p>To autostart, create a .vbs file. Same thing here, make sure the config file and the exe file are in the same folder.</p>
+<pre><code>Dim WinScriptHost
+Set WinScriptHost = CreateObject(&quot;WScript.Shell&quot;)
+WinScriptHost.Run Chr(34) &amp; &quot;path\to\v2ray.exe&quot; &amp; Chr(34), 0
+Set WinScriptHost = Nothing
+</code></pre>
+<p>Create a shortcut of it and add it to the <code>shell:startup</code> folder.</p>
+<hr>
+<p>I also tried the WebSocket+TLS+Web+CDN combo, but somehow it didn't work. It might be some problem related to Cloudflare that I am too <del>dumb</del> lazy to figure out. The server is working fine, but the access log at the client is dumping on me tons of ambiguous errors. But if I do find the solution, I might update this later.</p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">Next Article</div>
+            <a href="https://blog.tapiocanation.xyz/post/an-overview-of-ipfs-usage-explanation-and-history/">
+              <h3 class="post-title">
+                An Overview of IPFS: Usage, Explanation, and Thoughts
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+
+          
+            <link rel="stylesheet" href="https://unpkg.com/disqusjs@1.1/dist/disqusjs.css">
+<script src="https://unpkg.com/disqusjs@1.1/dist/disqus.js"></script>
+
+<div id="disqus_thread"></div>
+
+<script>
+
+var options = {
+  shortname: 'gingeryum',
+  apikey: 'icC4GzSrpNawmpHd91kR1Ns03i2jHwjR8tRDV90gXCFaxZROOrelXmxBYXbXjOnn',
+}
+if ('https://disqus.skk.moe/disqus/') {
+  options.api = 'https://disqus.skk.moe/disqus/'
+}
+var dsqjs = new DisqusJS(options)
+
+</script>
+
+          
+        
+
+        <div class="site-footer">
+  Powered by  <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://blog.tapiocanation.xyz/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
