@@ -1,0 +1,449 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gentoo Installation (encryption + btrfs subvolume + multi boot) | Gingermilk&#39;s Cabin</title>
+<link rel="shortcut icon" href="https://blog.tapiocanation.xyz/favicon.ico?v=1624238555701">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://blog.tapiocanation.xyz/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Gentoo Installation (encryption + btrfs subvolume + multi boot) | Gingermilk&#39;s Cabin - Atom Feed" href="https://blog.tapiocanation.xyz/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="I have been using Arch as my daily drive for a while and decided to venture a little bit by trying out Gentoo. My first ..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://blog.tapiocanation.xyz">
+  <img class="avatar" src="https://blog.tapiocanation.xyz/images/avatar.png?v=1624238555701" alt="">
+  </a>
+  <h1 class="site-title">
+    Gingermilk&#39;s Cabin
+  </h1>
+  <p class="site-description">
+    A place for me to record things.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archives
+        </a>
+      
+    
+      
+        <a href="https://blog.tapiocanation.xyz/tags" class="menu">
+          Tags
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Gentoo Installation (encryption + btrfs subvolume + multi boot)
+            </h2>
+            <div class="post-info">
+              <span>
+                2021-06-20
+              </span>
+              <span>
+                18 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>I have been using Arch as my daily drive for a while and decided to venture a little bit by trying out Gentoo. My first Gentoo installation went semi-successfully, so I want to record my installation process here in case I encounter the same problem in the future. Therefore, this post serves a purpose more of a personal record than a guide. With that being said, you are welcome to follow it.</p>
+<hr>
+<h2 id="before-installation">Before Installation</h2>
+<p>There are three drives on my computer. One ssd (dev/sda) for Windows and Arch, one hdd (dev/sdb) for shared storage, and a nvme ssd (dev/nvme0n1) with two partitions linked to Windows. I am going to install a <strong>luks encrypted Gentoo with btrfs subvolumes as root</strong> to my nvme drive.</p>
+<p>Since I already have a linux running, there is no need for me to use any additional installation medium. But if you only have Windows, download the <a href="https://ubuntu.com/download/desktop">Ubuntu iso</a> or any other distro that can access a GUI based browser without installing the system and create a bootable usb stick using <a href="https://rufus.ie/en_US/">Rufus</a>.</p>
+<hr>
+<h2 id="preparing-the-disk">Preparing the Disk</h2>
+<p>Change the user to root for your own convenience. This step is optional.</p>
+<pre><code class="language-bash">sudo -i
+</code></pre>
+<p>Open your favorite disk management tool on your Linux and be ready to partition your disk. For me it's fdisk.</p>
+<pre><code class="language-bash">fdisk /dev/nvme0n1 #change it to your disk
+</code></pre>
+<p>If you don't know how to use fdisk, follow <a href="https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Disks#Partitioning_the_disk_with_GPT_for_UEFI">this page</a>. Please notice that I am using <strong>GPT/UEFI</strong> here. After finishing adding partition, you should have a layout similar to the one below. Check your partition layout by using the command <code>fdisk -l /dev/nvme0n1</code></p>
+<pre><code class="language-bash">Device            Start       End   Sectors  Size Type
+/dev/nvme0n1p1       34     32767     32734   16M Microsoft reserved
+/dev/nvme0n1p2    32768  40992767  40960000 19.5G Microsoft basic data
+/dev/nvme0n1p3 40992768  41402367    409600  200M EFI System
+/dev/nvme0n1p4 41402368  42426367   1024000  500M Linux filesystem
+/dev/nvme0n1p5 42426368 566714367 524288000  250G Linux filesystem
+</code></pre>
+<p><code>/dev/nvme0n1p3</code> is the EFI partition required by UEFI boot; <code>/dev/nvme0n1p4</code> is the boot partition required by an encrypted root; and <code>/dev/nvme0n1p5</code> is where we are going to put the root and home.<br>
+You are now ready to encrypt your system. Run the following command.</p>
+<pre><code class="language-bash">cryptsetup luksFormat /dev/nvme0n1p5 #change it to your desired partition
+</code></pre>
+<p>Type the password and open it.</p>
+<pre><code class="language-bash">cryptsetup luksOpen /dev/nvme0n1p5 cryptgentoo #or name it anything you want
+</code></pre>
+<p>Format your system accordingly.</p>
+<pre><code class="language-bash">mkfs.vfat -F 32 /dev/nvme0n1p3 #change it to your EFI partition
+mkfs.ext4 /dev/nvme0n1p4 #change it to your boot partition
+mkfs.btrfs /dev/mapper/cryptgentoo #change cryptgentoo to the name you gave earlier
+</code></pre>
+<p>Create subvolumes for root and home. You might have to manually create the folder and mount the top volume first. After you have created the subvolume, you can safely unmount.</p>
+<pre><code>mkdir -p /mnt/gentoo
+mount /dev/mapper/cryptgentoo /mnt/gentoo
+btrfs subvolume create /mnt/gentoo/gentoo
+btrfs subvolume create /mnt/gentoo/gentoo/home
+mkdir /mnt/gentoo/home
+umount /dev/mapper/cryptgentoo
+mount -o subvol=gentoo /dev/mapper/cryptgentoo /mnt/gentoo
+</code></pre>
+<hr>
+<h2 id="installing-gentoo-installation-files">Installing Gentoo Installation Files</h2>
+<p>If you are inside the live environment of Ubuntu, the clock should have been already set to UTC time. If not, double check if you have the correct time and adjust it manually if needed.</p>
+<pre><code class="language-bash">date MMDDhhmmYYYY
+</code></pre>
+<p>Now you have to make a decision on which stage tarball to choose. I recommend multilib with openrc for most people due to its flexibility. Simply go to <a href="https://www.gentoo.org/downloads/">this page</a> and click download, or use your favorite tool like <code>wget</code> or <code>lynx</code>.</p>
+<p>The handbook suggests you to verify and validate the stage file. You should do it but I am going to skip this step. Just directly go to the directory and unpack the tarball.</p>
+<pre><code class="language-bash">cd /mnt/gentoo
+tar xpvf /path/to/stage3-*.tar.xz --xattrs-include='*.*' --numeric-owner
+</code></pre>
+<p>In order to optimize gentoo, you need to edit the make.conf. We are not going to make tons of changes here right now since you can always edit it later and activate the changes by <code>emerge --ask --changed-use --deep @world</code>. Open <code>/mnt/gentoo/etc/portage/make.conf</code> with a text editor and make the following changes.</p>
+<pre><code class="language-bash">COMMON_FLAGS=&quot;-march=native -O2 -pipe&quot;
+MAKEOPTS=&quot;-j&lt;number&gt;&quot; #number of cores plus one
+GENTOO_MIRRORS=&quot;http://www.gtlib.gatech.edu/pub/gentoo rsync://rsync.gtlib.gatech.edu/gentoo&quot;
+VIDEO_CARDS=&quot;&lt;your_card&gt;&quot; #intel, nvidia, radeon, vesa
+ACCEPT_KEYWORDS=&quot;~amd64&quot; #ignore this for faster compiling time
+</code></pre>
+<p>Change the mirrors if you are not living in the US. To use <code>mirrorselect</code>, you have to chroot to the new environment unless you are using the minimal gentoo installation CD which I adviced against earlier. Find a location that's close to you <a href="https://www.gentoo.org/downloads/mirrors/">here</a>.</p>
+<p>We still have a few important things to do before entering the new environment. For a detailed explanation, please resort to the handbook. I am only going to copy the commands.</p>
+<pre><code class="language-bash">mkdir --parents /mnt/gentoo/etc/portage/repos.conf
+cp /mnt/gentoo/usr/share/portage/config/repos.conf /mnt/gentoo/etc/portage/repos.conf/gentoo.conf
+cp --dereference /etc/resolv.conf /mnt/gentoo/etc/
+mount --types proc /proc /mnt/gentoo/proc
+mount --rbind /sys /mnt/gentoo/sys
+mount --make-rslave /mnt/gentoo/sys
+mount --rbind /dev /mnt/gentoo/dev
+mount --make-rslave /mnt/gentoo/dev
+test -L /dev/shm &amp;&amp; rm /dev/shm &amp;&amp; mkdir /dev/shm
+mount --types tmpfs --options nosuid,nodev,noexec shm /dev/shm
+chmod 1777 /dev/shm
+</code></pre>
+<p>Be sure that none of the commands above returns anything. You will encounter more errors in the Gentoo environment if it does.</p>
+<p>Now you can enter the new environment. The last command will add a <code>(chroot)</code> label to your hostname. Remember to always stay inside the chroot environment while doing the following steps in this post by checking the label.</p>
+<pre><code class="language-bash">chroot /mnt/gentoo /bin/bash
+source /etc/profile
+export PS1=&quot;(chroot) ${PS1}&quot;
+</code></pre>
+<p>Mount the boot and the efi partition. <strong>Do not do it before chrooting</strong>.</p>
+<pre><code class="language-bash">mount /dev/nvme0n1p4 /boot #change it to your boot partition
+mount /dev/nvme0n1p3 /boot/efi #change it to your efi partition
+</code></pre>
+<p>Install a snapshot of the Gentoo ebuild repository and update it.</p>
+<pre><code class="language-bash">emerge-websync
+emerge --sync
+</code></pre>
+<p>It's time to choose a profile. First check all the available profiles through <code>eselect profile list</code>, then select the profile by <code>eselect profile set &lt;number&gt;</code>. For now you can just select the default stable one for a faster compilation time. Otherwise select the <code>desktop</code> version.</p>
+<p>Update the @world set.</p>
+<pre><code class="language-bash">emerge -auvDN @world
+</code></pre>
+<p>Here comes the most Gentoo part of this Gentoo installation post, editing the USE flags. It is not required for you to do all the editing right now, so no worries if you don't know what you want to enable or disable. If you are using anything other than gnome or kde for desktop environment, I would encourage you to disable them. A full list of USE flags can be found <a href="https://www.gentoo.org/support/use-flags/">here</a>.</p>
+<p>I am skipping the license part for now. Next you need to set the timezone and locales.</p>
+<pre><code class="language-bash">ls /usr/share/zoneinfo
+echo &quot;your/timezone&quot; &gt; /etc/timezone
+emerge --config sys-libs/timezone-data
+echo en_US.UTF-8 UTF-8 &gt; /etc/locale.gen #add more if you like
+locale-gen
+</code></pre>
+<p>Set the system-wide locale settings by first checking the available targets using <code>eselect locale list</code>, then choose the locale by <code>eselect locale set &lt;number&gt;</code>. Reload the environment after you finish.</p>
+<pre><code class="language-bash">env-update &amp;&amp; source /etc/profile &amp;&amp; export PS1=&quot;(chroot) ${PS1}&quot;
+</code></pre>
+<hr>
+<h2 id="configuring-the-kernel">Configuring the Kernel</h2>
+<p>For the full Gentoo experience, you are welcome to configure the kernel manually. But keep in mind that it is a time-consuming process to find all your hardwares and the corresponding option. So for a compromised solution, I'm going to use genkernel with the <code>--menuconfig</code> option. This allows me to enjoy the benefits of an automatically configured kernel while not having to enable every possible option. Lovely.</p>
+<p>Emerge all the required packages. The second line emerges packages that might be useful later.</p>
+<pre><code class="language-bash">emerge --ask sys-kernel/gentoo-sources genkernel
+emerge --ask cryptsetup lvm2 btrfs-progs ntfs3g
+</code></pre>
+<p>If the output asks you to review the changed config files, do so by running <code>dispatch-conf</code> then retyping the commands above. To create a symbolic link, run the commands below.</p>
+<pre><code class="language-bash">eselect kernel list
+eselect kernel set 1
+</code></pre>
+<p>By then you should have a symbolic link called <code>linux</code> pointing to the kernel source. Check by listing it then changing your directory to it..</p>
+<pre><code class="language-bash">ls -l /usr/src/linux
+cd /usr/src/linux
+</code></pre>
+<p>Before generating the kernel, there are two things to do. First add your boot partition to <code>/etc/fstab</code>. I recommend using the UUID and it should be like this. You can find the UUID by running the command <code>blkid</code>.</p>
+<pre><code class="language-bash">#/dev/nvme0n1p4
+UUID=&lt;UUID&gt;	/boot	ext4	defaults,noatime	0 2
+</code></pre>
+<p>Next, be sure that <strong>you have the corresponding package for the kernel compression mode you are going to use</strong>. Let's take lz4 as an example. Check it by running emerge with the pretend option.</p>
+<pre><code class="language-bash">emerge -p lz4
+</code></pre>
+<p>If it is marked with an <code>N</code>, you need to install it. You don't need to do anything if it is marked with a <code>R</code>, which means replacing.</p>
+<p>Now run genkernel with all the options below.</p>
+<pre><code class="language-bash">genkernel --lvm --luks --btrfs --menuconfig --save-config all
+</code></pre>
+<p>I know we are not using lvm here, but you might have to add it and also enable it in your kernel in order to unlock your luks device when you boot. The last option will save your configuration and use that file the next time you run genkernel.</p>
+<p>When the menu shows up, do the following changes. <strong>Remember that M and * are different</strong>.</p>
+<pre><code class="language-bash">#btrfs support
+File systems  ---&gt;
+    &lt;*&gt; Btrfs filesystem
+
+#luks support
+[*] Enable loadable module support
+Device Drivers ---&gt;
+    [*] Multiple devices driver support (RAID and LVM) ---&gt;
+        &lt;*&gt; Device mapper support
+        &lt;*&gt;   Crypt target support
+[*] Cryptographic API ---&gt;
+    &lt;*&gt; XTS support
+    &lt;*&gt; SHA224 and SHA256 digest algorithm
+    &lt;*&gt; AES cipher algorithms
+    &lt;*&gt; AES cipher algorithms (x86_64)
+    &lt;*&gt; User-space interface for hash algorithms
+    &lt;*&gt; User-space interface for symmetric key cipher algorithms
+General setup  ---&gt;
+    [*] Initial RAM filesystem and RAM disk (initramfs/initrd) support
+
+#lvm support
+Device Drivers  ---&gt;
+   Multiple devices driver support (RAID and LVM)  ---&gt;
+       &lt;*&gt; Device mapper support
+           &lt;*&gt; Crypt target support
+           &lt;*&gt; Snapshot target
+           &lt;*&gt; Mirror target
+           &lt;*&gt; Multipath target
+               &lt;*&gt; I/O Path Selector based on the number of in-flight I/Os
+               &lt;*&gt; I/O Path Selector based on the service time
+
+#ntfs support
+File systems  ---&gt;
+    DOS/FAT/NT Filesystems  ---&gt;
+        &lt;*&gt; NTFS file system support
+        &lt;*&gt;   NTFS write support
+		&lt;*&gt; FUSE (Filesystem in Userspace) support
+
+#nvme support
+Device Drivers →
+  NVME Support →
+    &lt;*&gt; NVM Express block device
+    [*] NVMe multipath support
+    [*] NVMe hardware monitoring
+    &lt;M&gt; NVM Express over Fabrics FC host driver
+    &lt;M&gt; NVM Express over Fabrics TCP host driver
+    &lt;M&gt; NVMe Target support
+          [*]   NVMe Target Passthrough support
+        &lt;M&gt;   NVMe loopback device support
+        &lt;M&gt;   NVMe over Fabrics FC target driver
+        &lt; &gt;     NVMe over Fabrics FC Transport Loopback Test driver (NEW)
+        &lt;M&gt;   NVMe over Fabrics TCP target support
+</code></pre>
+<p>For optimization, check out <a href="https://youtu.be/NVWVHiLx1sU">Mental Outlaw's video</a>. After finished editing, save and exit. Genkernel will do the rest for you.</p>
+<p>The handbook masked it optional but I recommend you to install the firmware now.</p>
+<pre><code class="language-bash">emerge --ask sys-kernel/linux-firmware
+</code></pre>
+<h2 id="configure-the-system">Configure the System</h2>
+<p>Add a password to the root account by simply typing <code>passwd</code>. To add a new user, do the following</p>
+<pre><code class="language-bash">useradd -m -G users,wheel,audio,video,tty -s /bin/bash &lt;user&gt;
+passwd &lt;user&gt;
+</code></pre>
+<p>For sudo usage, install the sudo package and uncomment the required line in the configuration file. I'm not elaborating here.</p>
+<p>In order for your system to automatically mount the necessary partitions, everything has to be specified in <code>/etc/fstab</code>. I will give mine as an example.</p>
+<pre><code class="language-bash">#/dev/nvme0n1p4
+UUID=&lt;UUID&gt;	/boot	ext4	defaults,noatime	0 2
+#/dev/mapper/cryptgentoo
+UUID=&lt;UUID&gt;	/	btrfs	subvol=gentoo,subvolid=&lt;subvolid&gt;,relatime,rw   0 1
+#/dev/mapper/cryptgentoo
+UUID=&lt;UUID&gt;	/home	btrfs	subvol=/gentoo/home,subvolid=&lt;subvolid&gt;,relatime,rw 0 2
+#/dev/sdb3
+UUID=&lt;UUID&gt;	/data_shared	ntfs-3g	gid=&lt;gid&gt;,uid=&lt;uid&gt;,dmask=022,fmask=133,big_writes,windows_names	0 0
+#/dev/nvme0n1p3
+UUID=&lt;UUID&gt;	/boot/efi	vfat	defaults	0	0
+</code></pre>
+<p>It's hella messy, but you get the point. <code>/data_shared</code> is for my shared ntfs drive. Find the id by typing <code>id &lt;user&gt;</code>. <code>subvolid</code> is not required, but you can find it through <code>btrfs subvolume list /mnt</code>.</p>
+<p>Change the hostname in <code>/etc/conf.d/hostname</code> and edit the <code>/etc/hosts</code> file as followed.</p>
+<pre><code class="language-bash"># IPv4 and IPv6 localhost aliases
+127.0.0.1	&lt;hostname&gt;.localdomain localhost
+::1		localhost	&lt;hostname&gt;
+</code></pre>
+<p>If you are using ethernet, follow <a href="https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/System#Automatically_start_networking_at_boot">this part</a> of the handbook. If you are using wifi, you have some additional steps to do. I installed wpa_supplicant and networkmanager just in case. The guides for them are clear enough. <strong>Both ethernet and wifi users need the net-misc/dhcpcd package in most cases</strong>.</p>
+<p>Install a system logger and a cron daemon if you like.</p>
+<pre><code class="language-bash">emerge -a syslog-ng cronie
+rc-update add syslog-ng default
+rc-update add cronie default
+</code></pre>
+<hr>
+<h2 id="configuring-the-bootloader">Configuring the Bootloader</h2>
+<p>Echo the following to the corresponding file and add dmcrypt to openRC before emerging grub.</p>
+<pre><code class="language-bash">echo 'GRUB_PLATFORMS=&quot;efi-64&quot;' &gt;&gt; /etc/portage/make.conf
+echo &quot;sys-boot/grub:2 device-mapper&quot; &gt;&gt; /etc/portage/package.use/sys-boot
+rc-update add dmcrypt boot
+emerge -a sys-boot/grub:2
+</code></pre>
+<p>Edit the grub configuration file so your luks with btrfs subvolume setup works. Open <code>/etc/default/grub</code> and add this line. The first UUID is your raw partition (e.g. /dev/nvme0n1p5), and the second UUID is your opened luks device (e.g. /dev/mapper/cryptgentoo).</p>
+<pre><code class="language-bash">GRUB_CMDLINE_LINUX=&quot;crypt_root=UUID=&lt;UUID_of_your_luks_partition&gt; real_root=UUID=&lt;UUID_of_your_decrypted_luks_device&gt; rootflags=subvol=gentoo rootfstype=btrfs dolvm dobtrfs quiet&quot;
+</code></pre>
+<p>Also you might want to uncomment <code>GRUB_TIMEOUT=</code> and add a number (in seconds). This way it gives you more time to choose a system before the screen flashes to the first boot entry.</p>
+<p>Install grub. Make sure that your EFI partition is mounted. <strong>Do not forget the <code>--removable</code> option</strong>, otherwise it might not appear on your boot menu.</p>
+<pre><code class="language-bash">grub-install --target=x86_64-efi --efi-directory=/boot/efi --removable /dev/nvme0n1 #change it to your disk
+</code></pre>
+<p>Generate the configuration. Ignore the os-prober warning unless you need it to detect Windows that's on the same disk.</p>
+<pre><code class="language-bash">grub-mkconfig -o /boot/grub/grub.cfg
+</code></pre>
+<p>Time to reboot! Yeahhhhhhh</p>
+<pre><code class="language-bash">exit
+cd
+umount -l /mnt/gentoo/dev{/shm,/pts,}
+umount -R /mnt/gentoo
+reboot
+</code></pre>
+<p>Don't forget to remove your usb device if you are using one.</p>
+<hr>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p><strong>Problem</strong>: <em>Block device is not a valid root device</em><br>
+<strong>Solution</strong>: Double check that you have all the options related to luks and lvm enabled in your kernel, the <code>--lvm</code> option is passed when generating an initramfs, dmcrypt is added to rc-service, and your <code>/etc/default/grub</code> file is like what I have above. If mine doesn't work, try some alternating options like <code>root=UUID=&lt;UUID&gt;</code>, <code>rd.luks.uuid=&lt;UUID&gt;</code>, etc. Keep trying until you get a different error.</p>
+<p><strong>Problem</strong>: <em>Failed to open LUKS device /dev/xxx</em><br>
+<strong>Solution</strong>: Try everything above. If nothing works, try removing the cryptsetup package from the @world using the command below but do not depclean. Really weird and dumb but it worked in my case. Re-emerge it later after you manage to enter the system.</p>
+<pre><code class="language-bash">emerge --deselect cryptsetup @world
+</code></pre>
+<p><strong>Problem</strong>: <em>Invalid EFI path</em><br>
+<strong>Solution</strong>: This should not happen at all. Are you sure you are on the UEFI mode? If you get this for booting Windows, did you manually add the BIOS mode chainloader entry instead of using os-prober? Or if you are trying to chainload your Gentoo machine to the grub on the other disk or vise versa but it doesn't work? For the last scenario, let me present to you a simpler method. Just copy the entry on the <code>grub.cfg</code> (should be right after <code>### BEGIN /etc/grub.d/10_linux ###</code>) and paste it in <code>/etc/grub.d/40_custom</code> for the other grub. Regenerate grub afterwards.</p>
+<hr>
+<p>I have been using Gentoo for a week or so after I finished writing this. My thoughts? Fuck /g/entoo I'm back to sweet home arch. It is indeed a good distro if you are all for minimalism and customization, but sorry I am not really interested in turning my room into an airport when compiling firefox.</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#before-installation">Before Installation</a></li>
+<li><a href="#preparing-the-disk">Preparing the Disk</a></li>
+<li><a href="#installing-gentoo-installation-files">Installing Gentoo Installation Files</a></li>
+<li><a href="#configuring-the-kernel">Configuring the Kernel</a></li>
+<li><a href="#configure-the-system">Configure the System</a></li>
+<li><a href="#configuring-the-bootloader">Configuring the Bootloader</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">Next Article</div>
+            <a href="https://blog.tapiocanation.xyz/post/an-alternative-interpretation-of-kon-satoshis-perfect-blue-part-2/">
+              <h3 class="post-title">
+                An Alternative Interpretation of Kon Satoshi&#39;s Perfect Blue (Part 2)
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+
+          
+            <link rel="stylesheet" href="https://unpkg.com/disqusjs@1.1/dist/disqusjs.css">
+<script src="https://unpkg.com/disqusjs@1.1/dist/disqus.js"></script>
+
+<div id="disqus_thread"></div>
+
+<script>
+
+var options = {
+  shortname: 'gingeryum',
+  apikey: 'icC4GzSrpNawmpHd91kR1Ns03i2jHwjR8tRDV90gXCFaxZROOrelXmxBYXbXjOnn',
+}
+if ('https://disqus.skk.moe/disqus/') {
+  options.api = 'https://disqus.skk.moe/disqus/'
+}
+var dsqjs = new DisqusJS(options)
+
+</script>
+
+          
+        
+
+        <div class="site-footer">
+  Powered by  <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://blog.tapiocanation.xyz/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
