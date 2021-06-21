@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://blog.tapiocanation.xyz</id>
     <title>Gingermilk&apos;s Cabin</title>
-    <updated>2021-06-21T01:22:38.337Z</updated>
+    <updated>2021-06-21T01:22:57.726Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://blog.tapiocanation.xyz"/>
     <link rel="self" href="https://blog.tapiocanation.xyz/atom.xml"/>
@@ -15,7 +15,7 @@
         <id>https://blog.tapiocanation.xyz/post/gentoo-installation-encryption-btrfs-subvolume-multi-boot/</id>
         <link href="https://blog.tapiocanation.xyz/post/gentoo-installation-encryption-btrfs-subvolume-multi-boot/">
         </link>
-        <updated>2021-06-20T12:59:14.000Z</updated>
+        <updated>2021-06-20T00:59:14.000Z</updated>
         <content type="html"><![CDATA[<p>I have been using Arch as my daily drive for a while and decided to venture a little bit by trying out Gentoo. My first Gentoo installation went semi-successfully, so I want to record my installation process here in case I encounter the same problem in the future. Therefore, this post serves a purpose more of a personal record than a guide. With that being said, you are welcome to follow it.</p>
 <hr>
 <h2 id="before-installation">Before Installation</h2>
