@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>An Overview of IPFS: Usage, Explanation, and Thoughts | Gingermilk&#39;s Cabin</title>
-<link rel="shortcut icon" href="https://blog.tapiocanation.xyz/favicon.ico?v=1624238573573">
+<link rel="shortcut icon" href="https://blog.tapiocanation.xyz/favicon.ico?v=1624238993921">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://blog.tapiocanation.xyz/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="An Overview of IPFS: Usage, Explanation, and Thoughts | Gingermilk&#39;s Cabin - Atom Feed" href="https://blog.tapiocanation.xyz/atom.xml">
@@ -21,7 +21,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://blog.tapiocanation.xyz">
-  <img class="avatar" src="https://blog.tapiocanation.xyz/images/avatar.png?v=1624238573573" alt="">
+  <img class="avatar" src="https://blog.tapiocanation.xyz/images/avatar.png?v=1624238993921" alt="">
   </a>
   <h1 class="site-title">
     Gingermilk&#39;s Cabin
@@ -72,7 +72,7 @@
             </h2>
             <div class="post-info">
               <span>
-                2021-03-18
+                2021-03-17
               </span>
               <span>
                 13 min read
@@ -89,6 +89,7 @@
                 <p>Until now, the World Wide Web relies on HTTP to transfer data and establish communication across the web. But in 2015, an American guy named Juan Benet created a new protocol called IPFS, or you might like its sci-fi sounding name better, <em>&quot;InterPlanetary File System&quot;</em>, to compete with HTTP. Instead of the classic server-client approach, IPFS decides to go with peer-to-peer, which should sound familiar if you know BitTorrent. <strong>To summarize it in a short sentence, IPFS is a peer-to-peer file sharing system that claims to be faster, safer, and more open.</strong></p>
 <p>The goal of IPFS is to provide a better alternative for HTTP and ultimately, to replace HTTP. This sounds extremely ambitious, and that's why it interests me. However, after tried it for a little while, I have to say that IPFS is still too immature compared to HTTP, considering that the later one has dominated the web (to be more precise, it started the web) since its creation in the 90s and has evolved a lot after that. IPFS is a promising and somehow a little revolutionary project, but it still needs time to develop.</p>
 <hr>
+<h2 id="usage">Usage</h2>
 <p>First, let's take a look at how to use IPFS. In order to use IPFS, there are some basic concepts one needs to know:</p>
 <ul>
 <li><strong>Every file on the IPFS network has a unique hash, known as CID</strong>, that resembles a location address and we can use the hash to point to a specific file.</li>
@@ -96,16 +97,16 @@
 <li><strong>IPFS is a self-certifying file system (SFS)</strong>, which means that o special permission is needed for data exchange.</li>
 <li><strong>The content on IPFS is not permanent unless it is pinned</strong>.</li>
 </ul>
-<p>###How to Retrieve Content<br>
-There are currently four ways to retrieve content from IPFS: public gateway, local gateway, get/cat command, and Integrated IPFS in Brave browser.</p>
-<p>####Public Gateway<br>
-Protocol Labs maintains a <a href="https://ipfs.github.io/public-gateway-checker/">list of public gateways</a> that allows users to view the content of files on the  IPFS network without installing IPFS on their local machines.</p>
+<h3 id="how-to-retrieve-content">How to Retrieve Content</h3>
+<p>There are currently four ways to retrieve content from IPFS: public gateway, local gateway, get/cat command, and Integrated IPFS in Brave browser.</p>
+<h3 id="public-gateway">Public Gateway</h3>
+<p>Protocol Labs maintains a <a href="https://ipfs.github.io/public-gateway-checker/">list of public gateways</a> that allows users to view the content of files on the  IPFS network without installing IPFS on their local machines.</p>
 <p>To use it, choose an online gateway and follow the syntax here:<br>
 <code>&lt;gateway address&gt;/ipfs/&lt;hash&gt;</code></p>
 <p>For example, here is what you will type in your browser to access a copy of the Turkish wikipedia:<br>
 <code>ipfs.io/ipfs/QmT5NvUtoM5nWFfrQdVrFtvGfKFmG7AHE8P34isapyhCxX/</code></p>
-<p>####Local Gateway<br>
-Download IPFS-Desktop from <a href="https://github.com/ipfs-shipyard/ipfs-desktop/releases/tag/v0.14.0">here</a> or use the Go implementation of IPFS by following this <a href="https://docs.ipfs.io/install/command-line/">guide</a> if you are on a remote server or just think GUI is bloated.</p>
+<h3 id="local-gateway">Local Gateway</h3>
+<p>Download IPFS-Desktop from <a href="https://github.com/ipfs-shipyard/ipfs-desktop/releases/tag/v0.14.0">here</a> or use the Go implementation of IPFS by following this <a href="https://docs.ipfs.io/install/command-line/">guide</a> if you are on a remote server or just think GUI is bloated.</p>
 <p>Initialize the repository:<br>
 <code>ipfs init</code></p>
 <p>Take the node online:<br>
@@ -114,8 +115,8 @@ Download IPFS-Desktop from <a href="https://github.com/ipfs-shipyard/ipfs-deskto
 <p>Now you can access content by typing this in your browser:<br>
 <code>127.0.0.1:8080/ipfs/&lt;hash&gt;</code></p>
 <p>The port can be specified in the config file.</p>
-<p>####get/cat Command<br>
-Make sure you have installed IPFS-Desktop or go-ipfs and the daemon is started.</p>
+<h3 id="getcat-command">get/cat Command</h3>
+<p>Make sure you have installed IPFS-Desktop or go-ipfs and the daemon is started.</p>
 <p>The ipfs cat command is similar to the cat command on Unix systems and it reads content from the IPFS network.<br>
 <code>ipfs cat &lt;hash&gt;</code></p>
 <p>Alternatively, you can use the get command to download the content.<br>
@@ -123,19 +124,19 @@ Make sure you have installed IPFS-Desktop or go-ipfs and the daemon is started.<
 <p>If nothing returns, it is possible that none of the peers you are connected to holds a copy of the file you requested. To check if any peer has the file, run:<br>
 <code>ipfs dht findprovs &lt;hash&gt;</code></p>
 <p>You cannot request a file from a specific peer because there is no point in doing this. All the files that share the same hash contain the identical content.</p>
-<p>####Integrated IPFS in Brave Browser<br>
-Brave anounced their support of IPFS in January this year. You can type this in Brave browser to access content:<br>
+<h3 id="integrated-ipfs-in-brave-browser">Integrated IPFS in Brave Browser</h3>
+<p>Brave anounced their support of IPFS in January this year. You can type this in Brave browser to access content:<br>
 <code>ipfs://&lt;hash&gt;</code></p>
 <p>Be aware that by default, Brave uses public gateways to load the requested content. Brave will suggest you to enable IPFS local daemon support if you are visiting through a public gateway, and by clicking &quot;Enable IPFS&quot;, Brave will automatically download go-ipfs and route all IPFS traffic through your local gateway.</p>
-<p>###How To Add Content<br>
-Download IPFS-Desktop <a href="https://github.com/ipfs-shipyard/ipfs-desktop/releases/tag/v0.14.0">here</a> or follow this <a href="https://docs.ipfs.io/install/command-line/">guide</a> to install go-ipfs if you have not already done so. Now you are able to upload file from the desktop app, webUI, or directly from the command line. I guess <a href="https://pinata.cloud/">pinata</a> will also work, but I have never tried it.</p>
-<p>####Desktop App &amp; GUI<br>
-Open the app or access the webUI by typing this in your browser:<br>
+<h3 id="how-to-add-content">How To Add Content</h3>
+<p>Download IPFS-Desktop <a href="https://github.com/ipfs-shipyard/ipfs-desktop/releases/tag/v0.14.0">here</a> or follow this <a href="https://docs.ipfs.io/install/command-line/">guide</a> to install go-ipfs if you have not already done so. Now you are able to upload file from the desktop app, webUI, or directly from the command line. I guess <a href="https://pinata.cloud/">pinata</a> will also work, but I have never tried it.</p>
+<h3 id="desktop-app-gui">Desktop App &amp; GUI</h3>
+<p>Open the app or access the webUI by typing this in your browser:<br>
 <code>127.0.0.1:5001/webui</code><br>
 <em>(you need to start the daemon first in order to access the webUI and the port can be speficied in the config file or through 'settings')</em></p>
 <p>Click import and pin it if needed.</p>
-<p>####Command line<br>
-To add a file, run:<br>
+<h3 id="command-line">Command line</h3>
+<p>To add a file, run:<br>
 <code>ipfs add path/to/file</code></p>
 <p>Add -r to add a directory.<br>
 <code>ipfs add -r path/to/directory</code><br>
@@ -145,14 +146,15 @@ To add a file, run:<br>
 <p>Or add -r for directory.</p>
 <p>Other basic commands are explained by <code>ipfs -h</code>. Please use them for reference.</p>
 <hr>
+<h2 id="structure">Structure</h2>
 <p>Now we can get deeper into the structure of IPFS.</p>
-<p>###DHT<br>
-<strong>DHT, or distributed hash table, is a data structure used by IPFS that stores information as key pairs</strong>. Relying on DHT's decentralization, IPFS is able to function even if some nodes do down.</p>
-<p>###Merkle DAG<br>
-IPFS uses Merkle DAG as its data structure. According to the <a href="https://docs.ipfs.io/concepts/merkle-dag/#further-resources">official documentation of IPFS</a>, <em>&quot;A Merkle DAG is a DAG where each node has an identifier, and this is the result of hashing the node's contents — any opaque payload carried by the node and the list of identifiers of its children — using a cryptographic hash function like SHA256. &quot;</em> Merkle DAG resembles a &quot;reversed tree&quot; in which grows from leaves to branch. In order to link children's identifiers to the parents, children's identifiers must be calculated first.</p>
+<h3 id="dht">DHT</h3>
+<p><strong>DHT, or distributed hash table, is a data structure used by IPFS that stores information as key pairs</strong>. Relying on DHT's decentralization, IPFS is able to function even if some nodes do down.</p>
+<h3 id="merkle-dag">Merkle DAG</h3>
+<p>IPFS uses Merkle DAG as its data structure. According to the <a href="https://docs.ipfs.io/concepts/merkle-dag/#further-resources">official documentation of IPFS</a>, <em>&quot;A Merkle DAG is a DAG where each node has an identifier, and this is the result of hashing the node's contents — any opaque payload carried by the node and the list of identifiers of its children — using a cryptographic hash function like SHA256. &quot;</em> Merkle DAG resembles a &quot;reversed tree&quot; in which grows from leaves to branch. In order to link children's identifiers to the parents, children's identifiers must be calculated first.</p>
 <p>If you recall how I mentioned why request to a specific peer is unnecessary, here is a more detailed explanation: <strong>all nodes are given a unique CID (identifier or can just be called hash) to be identified from the network and the CID is linked to all its descendants</strong>. Copies of the requested objects with that CID from all peers are identical because they share the same DAG. If a change is made in one node, its identifier would alter which also causes its ascendants to alter correspondingly. This process creates a new DAG that cannot be retrieved using the original identifier.</p>
-<p>###IPFS Objects<br>
-An IPFS object is a structure that contains two fields, which can be visualized as follows</p>
+<h3 id="ipfs-objects">IPFS Objects</h3>
+<p>An IPFS object is a structure that contains two fields, which can be visualized as follows</p>
 <ul>
 <li>data: unstructured binary data &lt; 256kb</li>
 <li>Links: links that point to other IPFS objects
@@ -176,7 +178,32 @@ An IPFS object is a structure that contains two fields, which can be visualized 
 
               </div>
               <div class="toc-container">
-                
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#usage">Usage</a>
+<ul>
+<li><a href="#how-to-retrieve-content">How to Retrieve Content</a></li>
+<li><a href="#public-gateway">Public Gateway</a></li>
+<li><a href="#local-gateway">Local Gateway</a></li>
+<li><a href="#getcat-command">get/cat Command</a></li>
+<li><a href="#integrated-ipfs-in-brave-browser">Integrated IPFS in Brave Browser</a></li>
+<li><a href="#how-to-add-content">How To Add Content</a></li>
+<li><a href="#desktop-app-gui">Desktop App &amp; GUI</a></li>
+<li><a href="#command-line">Command line</a></li>
+</ul>
+</li>
+<li><a href="#structure">Structure</a>
+<ul>
+<li><a href="#dht">DHT</a></li>
+<li><a href="#merkle-dag">Merkle DAG</a></li>
+<li><a href="#ipfs-objects">IPFS Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
               </div>
             </div>
           </article>

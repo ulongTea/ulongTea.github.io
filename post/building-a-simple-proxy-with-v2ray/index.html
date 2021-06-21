@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Building a simple proxy with V2ray | Gingermilk&#39;s Cabin</title>
-<link rel="shortcut icon" href="https://blog.tapiocanation.xyz/favicon.ico?v=1624238573573">
+<link rel="shortcut icon" href="https://blog.tapiocanation.xyz/favicon.ico?v=1624238993921">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://blog.tapiocanation.xyz/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="Building a simple proxy with V2ray | Gingermilk&#39;s Cabin - Atom Feed" href="https://blog.tapiocanation.xyz/atom.xml">
@@ -21,7 +21,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://blog.tapiocanation.xyz">
-  <img class="avatar" src="https://blog.tapiocanation.xyz/images/avatar.png?v=1624238573573" alt="">
+  <img class="avatar" src="https://blog.tapiocanation.xyz/images/avatar.png?v=1624238993921" alt="">
   </a>
   <h1 class="site-title">
     Gingermilk&#39;s Cabin
@@ -72,7 +72,7 @@
             </h2>
             <div class="post-info">
               <span>
-                2021-04-13
+                2021-04-12
               </span>
               <span>
                 7 min read
@@ -90,8 +90,8 @@
 <p>In a nutshell, v2ray uses a inbound-and-outbound structure to control the flow of packets. If v2ray is used on a client, then the inbound will receive data from the browser and the outbound will send data to the server; if v2ray is used on a server, then the inbound will receive data from the client and the outbound will send data to where the client has requested. You can have multiple outbounds and inbounds. The way inbound and outbound handles data is determined by different protocols (Socks, VMess, VLess, Freedom, etc.), and each protocol may have its own transport (TCP, mKcp, WebSocket, etc.).</p>
 <p>VMess is an original and the most widely used protocol, developed by V2ray specifically for passing the deep packet inspection imposed by the GFW. VLess is an updated version of it that does not require time synchronization but does not have the traffic encrypted. Here we are going to setup a basic proxy using VMess.</p>
 <hr>
-<p><em><strong>Server</strong></em><br>
-Log into your server and set the time if it's not what you have on the client.</p>
+<h2 id="server">Server</h2>
+<p>Log into your server and set the time if it's not what you have on the client.</p>
 <pre><code class="language-bash">date -s 'year-month-day hour:minute:second'
 </code></pre>
 <p>It would be the easiest to install V2ray via their script.</p>
@@ -138,8 +138,8 @@ bash go.sh
 <pre><code class="language-bash">ufw allow [port number]/tcp
 ufw allow [port number]/udp
 </code></pre>
-<p><em><strong>Linux Client</strong></em><br>
-Find your system's architecture <a href="https://github.com/v2fly/v2ray-core/releases/tag/v4.37.3">here</a>. Download and extract it. Now find the <code>config.json</code> file and write it like this.</p>
+<h2 id="linux-client">Linux Client</h2>
+<p>Find your system's architecture <a href="https://github.com/v2fly/v2ray-core/releases/tag/v4.37.3">here</a>. Download and extract it. Now find the <code>config.json</code> file and write it like this.</p>
 <pre><code class="language-json">{
   &quot;log&quot;:{
    &quot;loglevel&quot;: &quot;info&quot;,
@@ -213,8 +213,8 @@ WantedBy=multi-user.target
 systemctl enable v2ray.service
 </code></pre>
 <p>If it can't be started, you might need to create the log files manually.</p>
-<p><em><strong>Windows Client</strong></em><br>
-Find your system's architecture <a href="https://github.com/v2fly/v2ray-core/releases/tag/v4.37.3">here</a>. Download and extract it. The config file should be the same as what I wrote above for linux and the only change you need to make is to delete the <code>log</code> sector because windows doesn't support it.</p>
+<h2 id="windows-client">Windows Client</h2>
+<p>Find your system's architecture <a href="https://github.com/v2fly/v2ray-core/releases/tag/v4.37.3">here</a>. Download and extract it. The config file should be the same as what I wrote above for linux and the only change you need to make is to delete the <code>log</code> sector because windows doesn't support it.</p>
 <p>To autostart, create a .vbs file. Same thing here, make sure the config file and the exe file are in the same folder.</p>
 <pre><code>Dim WinScriptHost
 Set WinScriptHost = CreateObject(&quot;WScript.Shell&quot;)
@@ -227,7 +227,16 @@ Set WinScriptHost = Nothing
 
               </div>
               <div class="toc-container">
-                
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#server">Server</a></li>
+<li><a href="#linux-client">Linux Client</a></li>
+<li><a href="#windows-client">Windows Client</a></li>
+</ul>
+</li>
+</ul>
+
               </div>
             </div>
           </article>
